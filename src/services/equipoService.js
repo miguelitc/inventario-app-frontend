@@ -10,8 +10,7 @@ export const obtenerEquipos = async () => {
             throw new Error('Error al conectar con el servidor');
         }
         return await respuesta.json(); // Esto nos devuelve el arreglo de equipos
-    } catch (error) {
-        console.error("Hubo un problema con la petición GET:", error);
+    } catch {
         return []; // Devolvemos un arreglo vacío para que no truene la app
     }
 };

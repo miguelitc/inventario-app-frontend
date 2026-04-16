@@ -60,9 +60,7 @@ const manejarAgregarEmpleadoRapido = () => {
             showConfirmButton: false,
             timer: 2000
           });
-        } catch (error) {
-          console.error("❌ ERROR ATRAPADO EN REACT:", error);
-          
+        } catch {
           // Hacemos que SweetAlert nos muestre el error real
           Swal.fire(
             'Error en el Servidor', 
@@ -75,13 +73,12 @@ const manejarAgregarEmpleadoRapido = () => {
   };
   const manejarEnvio = (e) => {
     e.preventDefault();
-    console.log("1. ID en el select:", empleadoId);
+    
     const empleadoSeleccionado = empleados.find(emp => emp.id === parseInt(empleadoId));
-    console.log("2. Empleado encontrado:", empleadoSeleccionado);
     const datos = { nombreEquipo, tipo, numeroSerie,
       empleado: empleadoSeleccionado || null // Mandamos el objeto empleado
     };
-    console.log("3. PAQUETE FINAL A ENVIAR:", datos);
+    
     
     if (equipoParaEditar) onActualizar(equipoParaEditar.id, datos);
     else {

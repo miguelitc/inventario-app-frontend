@@ -7,8 +7,8 @@ export const obtenerEmpleados = async () => {
         if (!respuesta.ok) throw new Error("Error en la red");
         const datosDesempaquetados = await respuesta.json();
         return datosDesempaquetados.content;
-    } catch (error) {
-        console.error("Error al traer empleados:", error);
+    } catch {
+      
         return [];
     }
 };
