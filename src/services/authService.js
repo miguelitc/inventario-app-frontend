@@ -1,6 +1,6 @@
 // src/services/authService.js
-//const API_URL = "https://inventario-api-backend-fbkq.onrender.com/api/v1/auth";
-const API_URL = "https:localhost:8080/api/v1/auth";
+const API_URL = "https://inventario-api-backend-fbkq.onrender.com/api/v1/auth";
+//const API_URL = "https:localhost:8080/api/v1/auth";
 
 export const login = async (username, password) => {
     const response = await fetch(`${API_URL}/login`, {
