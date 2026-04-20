@@ -17,9 +17,9 @@ const Login = () => {
             // Intentamos conseguir el Token
             await login(username, password);
             
-            alert("¡Bienvenido al sistema!");
+            //alert("¡Bienvenido al sistema!");
             // navigate('/equipos'); // Redireccionar al inventario real
-            // window.location.reload(); // Recargar para aplicar estados
+             window.location.reload(); // Recargar para aplicar estados
             
         } catch (err) {
             setError(err.message);
