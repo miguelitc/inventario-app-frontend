@@ -1,6 +1,15 @@
 // src/services/empleadoService.js
 const API_URL = "https://inventario-api-backend-fbkq.onrender.com/api/v1/empleados?size=1000";
 
+const getAuthHeaders = () => {
+    const token = localStorage.getItem("jwt_token");
+    return {
+        "Content-Type": "application/json",
+        // 2. ¡Aquí está la magia! Le pegamos la palabra "Bearer " seguida del token
+        "Authorization": token ? `Bearer ${token}` : "" 
+    };
+};
+
 export const obtenerEmpleados = async () => {
     try {
         const respuesta = await fetch(API_URL);
