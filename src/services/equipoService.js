@@ -3,31 +3,37 @@
 // Ajusta esta URL al puerto donde corre tu Spring Boot
 const API_URL = 'https://inventario-api-backend-fbkq.onrender.com/api/equipos'; 
 
+
+const getAuthHeaders = () => {
+    const token = localStorage.getItem("jwt_token");
+    return {
+        "Content-Type": "application/json",
+        "Authorization": token ? `Bearer ${token}` : "" 
+    };
+}; 
+
+// 2. Inyectar el token en el GET
 export const obtenerEquipos = async () => {
-    try {
-        const respuesta = await fetch(API_URL);
-        if (!respuesta.ok) {
-            throw new Error('Error al conectar con el servidor');
-        }
-        return await respuesta.json(); // Esto nos devuelve el arreglo de equipos
-    } catch {
-        return []; // Devolvemos un arreglo vacío para que no truene la app
+    const response = await fetch(API_URL, {
+        method: 'GET',
+        headers: getAuthHeaders() // ¡Entregamos el gafete al cadenero!
+    });
+
+    if (!response.ok) {
+        throw new Error("Error al obtener los equipos");
     }
+    
+    return await response.json();
 };
 
-export const crearEquipo = async (nuevoEquipo) => {
-    try {
-        const respuesta = await fetch(API_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(nuevoEquipo),
-        });
-        return await respuesta.json();
-    } catch (error) {
-        console.error("Hubo un problema con la petición POST:", error);
-    }
+// 3. (Asegúrate de hacer lo mismo en tu método para crear, editar o eliminar)
+export const crearEquipo = async (equipo) => {
+    const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: getAuthHeaders(), 
+        body: JSON.stringify(equipo)
+    });
+    return await response.json();
 };
 
 export const eliminarEquipo = async (id) => {
