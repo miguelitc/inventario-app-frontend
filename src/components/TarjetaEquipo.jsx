@@ -55,14 +55,16 @@ const TarjetaEquipo = ({ equipo, onEliminar, onEditar }) => {
                     <div className="flex items-center gap-2 border-t md:border-t-0 pt-4 md:pt-0">
                         <button 
                             onClick={() => onEditar(equipo)}
-                            // ... tus clases del botón de editar
-                        >
+                           className="flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-gray-50 hover:bg-amber-50 text-gray-600 hover:text-amber-600 rounded-xl font-bold transition-colors"
+                    >
+                        
                             <span>✏️</span> <span className="md:hidden lg:inline">Editar</span>
                         </button>
                         <button 
                             onClick={() => onEliminar(equipo.id)}
-                            // ... tus clases del botón de borrar
-                        >
+                            className="flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-gray-50 hover:bg-red-50 text-gray-600 hover:text-red-600 rounded-xl font-bold transition-colors"
+                    >
+                        
                             <span>🗑️</span> <span className="md:hidden lg:inline">Borrar</span>
                         </button>
                     </div>
