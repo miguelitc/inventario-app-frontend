@@ -2,39 +2,37 @@
 import React, { useState, useEffect } from 'react';
 import { obtenerEquipos , crearEquipo , eliminarEquipo, actualizarEquipo } from '../services/equipoService'; 
 import { obtenerEmpleados } from '../services/empleadoService';
-// 1. IMPORTAMOS AL HIJO
 import TarjetaEquipo from '../components/TarjetaEquipo'; 
 import FormularioEquipo from '../components/FormularioEquipo';
 import Swal from 'sweetalert2';
 
 function InventarioPage() {
-  //estados para los empleados
+  // estados para los empleados
   const [empleados, setEmpleados] = useState([]);
 
-
-
-  //estados para los esuqipos
+  // estados para los equipos
   const [equipos, setEquipos] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [equipoEnEdicion, setEquipoEnEdicion] = useState(null);
   const [busqueda, setBusqueda] = useState('');
   const [modalAbierto, setModalAbierto] = useState(false);
 
-  //para los modales
+  // para los modales
   const abrirModalNuevo = () => {
-    setEquipoEnEdicion(null); // Limpiamos si había algo editándose
-    setModalAbierto(true);    // Encendemos el modal
+    setEquipoEnEdicion(null); 
+    setModalAbierto(true);    
   };
 
   const cerrarModal = () => {
     setEquipoEnEdicion(null);
-    setModalAbierto(false);   // Apagamos el modal
+    setModalAbierto(false);   
   };
+
   const recargarListaEmpleados = async () => {
       const datosFrescos = await obtenerEmpleados();
-      // Si Java lo manda envuelto en "content", lo sacamos. Si no, lo guardamos normal.
       setEmpleados(datosFrescos.content ? datosFrescos.content : datosFrescos); 
-    };
+  };
+
   useEffect(() => {
     const cargarTodo = async () => {
       const [datosEquipos, datosEmpleados] = await Promise.all([
@@ -42,7 +40,6 @@ function InventarioPage() {
         obtenerEmpleados()
       ]);
       
-      // Aplicamos la misma magia para los dos, por si las dudas
       setEquipos(datosEquipos.content ? datosEquipos.content : datosEquipos);
       setEmpleados(datosEmpleados.content ? datosEmpleados.content : datosEmpleados);
       
@@ -51,15 +48,10 @@ function InventarioPage() {
     cargarTodo();
   }, []);
 
-  
-  // 2. CREAMOS LA FUNCIÓN PARA GUARDAR (Esta es la que le pasaremos al Hijo)
   const manejarAgregarNuevoEquipo = async (nuevoEquipoInfo) => {
-    // Llamamos al servicio para que haga el POST a Spring Boot
     const equipoGuardadoEnBD = await crearEquipo(nuevoEquipoInfo);
     
     if (equipoGuardadoEnBD) {
-      // ¡MAGIA DE REACT! Actualizamos la lista agregando el nuevo al final.
-      // Los tres puntos (...) significan: "Copia los equipos que ya tengo, y añade este nuevo".
       setEquipos([...equipos, equipoGuardadoEnBD]);
       Swal.fire({
         icon: 'success',
@@ -70,58 +62,40 @@ function InventarioPage() {
       cerrarModal();
     }
   };
-  // 2. CREAMOS LA FUNCIÓN PARA ELIMINAR
+
   const manejarEliminarEquipo = (id) => {
-    // 1. Lanzamos la alerta de confirmación
     Swal.fire({
       title: '¿Estás seguro?',
       text: "¡No podrás revertir esto! El equipo se borrará del sistema.",
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#ef4444', // Rojo Tailwind para confirmar
-      cancelButtonColor: '#9ca3af', // Gris Tailwind para cancelar
+      confirmButtonColor: '#ef4444', 
+      cancelButtonColor: '#9ca3af', 
       confirmButtonText: 'Sí, eliminar 🗑️',
       cancelButtonText: 'Cancelar'
     }).then(async (result) => {
-      
-      // 2. Si el usuario hace clic en "Sí, eliminar"
       if (result.isConfirmed) {
         try {
-          // Vamos a Spring Boot a eliminarlo
           await eliminarEquipo(id); 
-          
-          // Actualizamos la pantalla de React
           setEquipos(equipos.filter((equipo) => equipo.id !== id));
-          
-          // 3. Mostramos una alerta de éxito
-          Swal.fire(
-            '¡Eliminado!',
-            'El equipo ha sido borrado exitosamente.',
-            'success'
-          );
+          Swal.fire('¡Eliminado!', 'El equipo ha sido borrado exitosamente.', 'success');
         } catch {
-          // Por si algo falla en el backend
-          Swal.fire(
-            'Error',
-            'Hubo un problema al intentar eliminar el equipo.',
-            'error'
-          );
+          Swal.fire('Error', 'Hubo un problema al intentar eliminar el equipo.', 'error');
         }
       }
     });
   };
+
   const activarEdicion = (equipo) => {
     setEquipoEnEdicion(equipo);
     setModalAbierto(true); 
   };
 
-  // 4. LA FUNCIÓN PARA GUARDAR LOS CAMBIOS EN EL BACKEND
   const manejarActualizarEquipo = async (id, datosActualizados) => {
     const equipoRenovado = await actualizarEquipo(id, datosActualizados);
     if (equipoRenovado) {
-      // .map() busca el equipo viejo en la lista y lo reemplaza por el renovado
       setEquipos(equipos.map(eq => eq.id === id ? equipoRenovado : eq));
-      setEquipoEnEdicion(null); // Apagamos el modo edición
+      setEquipoEnEdicion(null); 
       Swal.fire({
         icon: 'success',
         title: 'Equipo Actualizado correctamente',
@@ -132,12 +106,12 @@ function InventarioPage() {
     }
   };
 
-  // NUEVA LÓGICA DE FILTRADO (Pon esto justo arriba del 'if (cargando)')
-    const equiposFiltrados = equipos.filter((equipo) => {
-      // Convertimos todo a minúsculas para que no importe si buscas "HP" o "hp"
-      return equipo.nombreEquipo.toLowerCase().includes(busqueda.toLowerCase()) || 
-            equipo.tipo.toLowerCase().includes(busqueda.toLowerCase()) || equipo.numeroSerie.toLowerCase().includes(busqueda.toLowerCase());
-    });
+  const equiposFiltrados = equipos.filter((equipo) => {
+    return equipo.nombreEquipo.toLowerCase().includes(busqueda.toLowerCase()) || 
+           equipo.tipo.toLowerCase().includes(busqueda.toLowerCase()) || 
+           equipo.numeroSerie.toLowerCase().includes(busqueda.toLowerCase());
+  });
+
   if (cargando) return (
     <div className="flex justify-center items-center h-screen">
       <h2 className="text-2xl font-semibold text-gray-600 animate-pulse">Conectando con el servidor... ⏳</h2>
@@ -155,40 +129,51 @@ function InventarioPage() {
           <p className="mt-2 text-gray-500">Gestión de equipos y asignaciones</p>
         </header>
 
-        <div className="mb-6">
-          <input
-            type="text"
-            placeholder="🔍 Buscar por nombre o tipo..."
-            value={busqueda}
-            onChange={(e) => setBusqueda(e.target.value)}
-            className="w-full px-5 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all text-gray-700 text-lg shadow-sm"
-          />
-          <button 
-            onClick={abrirModalNuevo}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl shadow-md transition-colors"
-          >
-            ➕ Nuevo Equipo
-          </button>
+        {/* 👇 AQUÍ ESTÁ EL NUEVO DISEÑO ESTRATÉGICO 👇 */}
+        <div className="flex flex-col md:flex-row gap-4 items-center justify-between mb-8">
+            {/* Barra de Búsqueda */}
+            <div className="relative w-full md:max-w-md group">
+                <span className="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400 group-focus-within:text-blue-500 transition-colors">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </span>
+                <input
+                    type="text"
+                    placeholder="Buscar por nombre, serie o tipo..."
+                    value={busqueda}
+                    onChange={(e) => setBusqueda(e.target.value)}
+                    className="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all text-gray-700 shadow-sm"
+                />
+            </div>
+
+            {/* Botón Nuevo Equipo */}
+            <button 
+                onClick={abrirModalNuevo}
+                className="w-full md:w-auto flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-2xl shadow-lg hover:shadow-blue-200 hover:-translate-y-0.5 active:scale-95 transition-all"
+            >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+                </svg>
+                <span>Nuevo Equipo</span>
+            </button>
         </div>
+        {/* 👆 FIN DEL NUEVO DISEÑO 👆 */}
+
         {modalAbierto && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-opacity-50 backdrop-blur-sm transition-opacity">
-            {/* Contenedor blanco del formulario */}
-          <div 
-            className="absolute inset-0 backdrop-blur-sm animate-fade-in"
-            style={{ backgroundColor: 'rgba(0, 0, 0, 0.2)' }} 
-            onClick={cerrarModal}
-          ></div>
-              {/* 2. CONTENEDOR: Se desliza hacia arriba (Slide Up) */}
-             <div className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl relative z-10 animate-modal-up overflow-hidden">
-
-              {/* Botón de cerrar (X) en la esquina superior */}
-             <button 
+            <div 
+              className="absolute inset-0 backdrop-blur-sm animate-fade-in"
+              style={{ backgroundColor: 'rgba(0, 0, 0, 0.2)' }} 
+              onClick={cerrarModal}
+            ></div>
+            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl relative z-10 animate-modal-up overflow-hidden">
+              <button 
                 onClick={cerrarModal}
                 className="absolute top-4 right-4 text-gray-400 hover:text-red-500 transition-colors"
               >
-               <span className="text-2xl">×</span>
+                <span className="text-2xl">×</span>
               </button>
-          {/* Inyectamos tu Formulario aquí adentro */}
               <FormularioEquipo 
                 key={equipoEnEdicion ? equipoEnEdicion.id : 'nuevo'}
                 empleados={empleados} 
@@ -196,13 +181,13 @@ function InventarioPage() {
                 equipoParaEditar={equipoEnEdicion} 
                 onActualizar={manejarActualizarEquipo}
                 onRecargarEmpleados={recargarListaEmpleados}
-                cancelarEdicion={cerrarModal} // Le pasamos la orden de cerrar
+                cancelarEdicion={cerrarModal} 
               />
-        </div>
-        </div>
+            </div>
+          </div>
         )}
+
         <div className="mt-8">
-          {/* CAMBIO CRUCIAL: Ahora evaluamos y dibujamos equiposFiltrados */}
           {equiposFiltrados.length === 0 ? (
             <div className="text-center py-10 bg-white rounded-xl shadow-sm border border-gray-100">
               <p className="text-gray-500 text-lg">
@@ -210,7 +195,7 @@ function InventarioPage() {
               </p>
             </div>
           ) : (
-           <div className="grid grid-cols-1 gap-4 mt-8">
+            <div className="grid grid-cols-1 gap-4">
               {equiposFiltrados.map((equipo) => (
                 <TarjetaEquipo 
                   key={equipo.id} 
