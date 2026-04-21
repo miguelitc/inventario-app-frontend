@@ -32,7 +32,8 @@ function InventarioPage() {
   };
   const recargarListaEmpleados = async () => {
       const datosFrescos = await obtenerEmpleados();
-      setEmpleados(datosFrescos); // ¡Esto es lo que hace que aparezca en el select!
+      // Si Java lo manda envuelto en "content", lo sacamos. Si no, lo guardamos normal.
+      setEmpleados(datosFrescos.content ? datosFrescos.content : datosFrescos); 
     };
   useEffect(() => {
     const cargarTodo = async () => {
@@ -40,8 +41,11 @@ function InventarioPage() {
         obtenerEquipos(),
         obtenerEmpleados()
       ]);
-      setEquipos(datosEquipos);
-      setEmpleados(datosEmpleados);
+      
+      // Aplicamos la misma magia para los dos, por si las dudas
+      setEquipos(datosEquipos.content ? datosEquipos.content : datosEquipos);
+      setEmpleados(datosEmpleados.content ? datosEmpleados.content : datosEmpleados);
+      
       setCargando(false);
     };
     cargarTodo();
