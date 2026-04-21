@@ -93,6 +93,32 @@ const Login = () => {
                     </button>
                 </form>
 
+                {/* 👇 SECCIÓN DE INVITADO 👇 */}
+                <div className="mt-6">
+                    <div className="relative flex items-center justify-center mb-6">
+                        <span className="absolute bg-white px-4 text-sm text-gray-400 font-medium">o</span>
+                        <div className="w-full border-t border-gray-200"></div>
+                    </div>
+                    
+                    <button 
+                        type="button"
+                        onClick={async () => {
+                            setCargando(true);
+                            try {
+                                await login('invitado', 'explora123');
+                                window.location.reload();
+                            } catch (err) {
+                                setError('El acceso de invitado no está disponible en este momento.');
+                                setCargando(false);
+                            }
+                        }}
+                        className="w-full py-4 rounded-xl text-gray-700 font-bold text-lg border-2 border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all flex items-center justify-center gap-2"
+                    >
+                        <span>👀</span> Entrar como Invitado
+                    </button>
+                </div>
+                {/* 👆 FIN SECCIÓN INVITADO 👆 */}
+
             </div>
         </div>
     );

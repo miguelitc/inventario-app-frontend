@@ -20,6 +20,7 @@ export const login = async (username, password) => {
     // 💾 El secreto: Guardamos el gafete (Token) en la memoria del navegador
     if (data.token) {
         localStorage.setItem("jwt_token", data.token);
+        localStorage.setItem("user_role", username === "mike_admin" ? "ADMIN" : "GUEST");
     }
     
     return data;
@@ -32,4 +33,6 @@ export const logout = () => {
 
 export const isAuthenticated = () => {
     return localStorage.getItem("jwt_token") !== null;
+    // NUEVO: Función para exportar el rol y usarlo en las pantallas
+export const getRole = () => localStorage.getItem("user_role") || "GUEST";
 };
