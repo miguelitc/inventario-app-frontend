@@ -1,6 +1,5 @@
 // src/services/authService.js
 const API_URL = "https://inventario-api-backend-fbkq.onrender.com/api/v1/auth";
-//const API_URL = "https:localhost:8080/api/v1/auth";
 
 export const login = async (username, password) => {
     const response = await fetch(`${API_URL}/login`, {
@@ -17,7 +16,7 @@ export const login = async (username, password) => {
 
     const data = await response.json();
     
-    // 💾 El secreto: Guardamos el gafete (Token) en la memoria del navegador
+    // Guardamos el token y el rol
     if (data.token) {
         localStorage.setItem("jwt_token", data.token);
         localStorage.setItem("user_role", username === "mike_admin" ? "ADMIN" : "GUEST");
@@ -26,13 +25,15 @@ export const login = async (username, password) => {
     return data;
 };
 
-// Función extra para saber si alguien ya inició sesión o para cerrar sesión
 export const logout = () => {
     localStorage.removeItem("jwt_token");
+    localStorage.removeItem("user_role");
 };
 
 export const isAuthenticated = () => {
     return localStorage.getItem("jwt_token") !== null;
-    // NUEVO: Función para exportar el rol y usarlo en las pantallas
-export const getRole = () => localStorage.getItem("user_role") || "GUEST";
+};
+
+export const getRole = () => {
+    return localStorage.getItem("user_role") || "GUEST";
 };
