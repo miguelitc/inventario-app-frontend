@@ -5,6 +5,7 @@ import { obtenerEmpleados } from '../services/empleadoService';
 import TarjetaEquipo from '../components/TarjetaEquipo'; 
 import FormularioEquipo from '../components/FormularioEquipo';
 import Swal from 'sweetalert2';
+import { logout } from '../services/authService';
 
 function InventarioPage() {
   // estados para los empleados
@@ -16,7 +17,9 @@ function InventarioPage() {
   const [equipoEnEdicion, setEquipoEnEdicion] = useState(null);
   const [busqueda, setBusqueda] = useState('');
   const [modalAbierto, setModalAbierto] = useState(false);
-
+  //estados para un logout
+  const [menuPerfilAbierto, setMenuPerfilAbierto] = useState(false);
+  
   // para los modales
   const abrirModalNuevo = () => {
     setEquipoEnEdicion(null); 
@@ -122,11 +125,72 @@ function InventarioPage() {
     <div className="min-h-screen bg-gray-50 py-10 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         
-        <header className="mb-8 text-center">
-          <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight">
-            Inventario General <span className="text-blue-600">📦</span>
-          </h1>
-          <p className="mt-2 text-gray-500">Gestión de equipos y asignaciones</p>
+       {/* Nueva Barra de Navegación Superior */}
+        <header className="mb-8 flex flex-col sm:flex-row justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+          
+          {/* Lado Izquierdo: Título */}
+          <div className="text-center sm:text-left mb-4 sm:mb-0">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
+              Inventario <span className="text-blue-600">📦</span>
+            </h1>
+            <p className="text-sm text-gray-500 font-medium">Gestión y asignaciones</p>
+          </div>
+
+          {/* Lado Derecho: Menú de Perfil */}
+          <div className="relative">
+            {/* El botón del Avatar */}
+            <button 
+              onClick={() => setMenuPerfilAbierto(!menuPerfilAbierto)}
+              className="flex items-center gap-3 hover:bg-gray-50 p-2 rounded-xl transition-all border border-transparent hover:border-gray-200 focus:outline-none"
+            >
+              <div className="text-right hidden md:block">
+                <p className="text-sm font-bold text-gray-700">Mike Admin</p>
+                <p className="text-xs text-green-500 font-medium">En línea</p>
+              </div>
+              
+              {/* Circulito del Avatar con tus iniciales */}
+              <div className="w-12 h-12 bg-gradient-to-tr from-blue-600 to-blue-400 rounded-full flex items-center justify-center text-white font-bold shadow-md transform transition-transform hover:scale-105">
+                MA
+              </div>
+              
+              {/* Flechita hacia abajo */}
+              <svg className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${menuPerfilAbierto ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+
+            {/* El Menú Desplegable (Caja Blanca) */}
+            {menuPerfilAbierto && (
+              <div className="absolute right-0 mt-3 w-56 bg-white rounded-2xl shadow-2xl border border-gray-100 py-2 z-50 animate-fade-in">
+                
+                {/* Opciones "falsas" para dar look profesional */}
+                <div className="px-4 py-3 border-b border-gray-50">
+                  <p className="text-sm text-gray-500">Sesión iniciada como</p>
+                  <p className="text-sm font-bold text-gray-900 truncate">mike_admin</p>
+                </div>
+
+                <button className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 font-medium transition-colors flex items-center gap-2">
+                  <span>⚙️</span> Configuración
+                </button>
+                <button className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 font-medium transition-colors flex items-center gap-2">
+                  <span>📊</span> Reportes
+                </button>
+                
+                <div className="border-t border-gray-100 my-1"></div>
+                
+                {/* Botón REAL de Cerrar Sesión */}
+                <button 
+                  onClick={() => { 
+                    logout(); 
+                    window.location.reload(); 
+                  }}
+                  className="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 font-bold transition-colors flex items-center gap-2"
+                >
+                  <span>🚪</span> Cerrar Sesión
+                </button>
+              </div>
+            )}
+          </div>
         </header>
 
         {/* 👇 AQUÍ ESTÁ EL NUEVO DISEÑO ESTRATÉGICO 👇 */}
