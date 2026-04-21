@@ -49,8 +49,8 @@ const TarjetaEquipo = ({ equipo, onEliminar, onEditar }) => {
                         {equipo.empleado ? equipo.empleado.nombre : 'Sin asignar'}
                     </span>
                 </div>
-
-                {/* Lado Derecho: Acciones (Solo se renderizan si esAdmin es true) */}
+                //
+                {/* Lado Derecho: Acciones (Solo se renderizan si esAdmin es true) prueba para cambios */}
                 {esAdmin && (
                     <div className="flex items-center gap-2 border-t md:border-t-0 pt-4 md:pt-0">
                         <button 
