@@ -38,12 +38,12 @@ export const crearEquipo = async (equipo) => {
 
 export const eliminarEquipo = async (id) => {
     try {
-        // Fíjate cómo agregamos el ID al final de la URL (ej. /api/v1/equipos/5)
         const respuesta = await fetch(`${API_URL}/${id}`, {
             method: 'DELETE',
+            // 1. Le entregamos el gafete al cadenero para que nos deje borrar
+            headers: getAuthHeaders(), 
         });
         
-        // Si Spring Boot responde con un estado 200 OK o 204 No Content, devuelve true
         return respuesta.ok; 
     } catch (error) {
         console.error("Hubo un problema con la petición DELETE:", error);
@@ -54,15 +54,14 @@ export const eliminarEquipo = async (id) => {
 export const actualizarEquipo = async (id, equipoActualizado) => {
     try {
         const respuesta = await fetch(`${API_URL}/${id}`, {
-            method: 'PUT', // Usamos PUT para actualizar
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            method: 'PUT',
+            // 2. Aquí también usamos el gafete (que ya incluye el Content-Type)
+            headers: getAuthHeaders(), 
             body: JSON.stringify(equipoActualizado),
         });
         
         if (!respuesta.ok) throw new Error('Error al actualizar');
-        return await respuesta.json(); // Devolvemos el equipo ya actualizado
+        return await respuesta.json(); 
     } catch (error) {
         console.error("Hubo un problema con la petición PUT:", error);
         return null;
