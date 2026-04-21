@@ -210,8 +210,7 @@ function InventarioPage() {
               </p>
             </div>
           ) : (
-            <div className="space-y-4">
-              {/* CAMBIO CRUCIAL: Mapeamos la lista filtrada */}
+           <div className="grid grid-cols-1 gap-4 mt-8">
               {equiposFiltrados.map((equipo) => (
                 <TarjetaEquipo 
                   key={equipo.id} 
