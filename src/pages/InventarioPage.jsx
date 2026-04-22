@@ -6,6 +6,7 @@ import TarjetaEquipo from '../components/TarjetaEquipo';
 import FormularioEquipo from '../components/FormularioEquipo';
 import Swal from 'sweetalert2';
 import { logout } from '../services/authService';
+import { getRole } from '../services/authService';
 
 function InventarioPage() {
   // estados para los empleados
@@ -19,7 +20,10 @@ function InventarioPage() {
   const [modalAbierto, setModalAbierto] = useState(false);
   //estados para un logout
   const [menuPerfilAbierto, setMenuPerfilAbierto] = useState(false);
-  
+
+  // 2️⃣ LA VARIABLE MÁGICA DEBE IR AQUÍ ADENTRO
+  const esAdmin = getRole() === 'ADMIN';
+
   // para los modales
   const abrirModalNuevo = () => {
     setEquipoEnEdicion(null); 

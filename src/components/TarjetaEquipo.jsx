@@ -1,8 +1,10 @@
 // src/components/TarjetaEquipo.jsx
 import React from 'react';
+import { getRole } from '../services/authService';
 
 const TarjetaEquipo = ({ equipo, onEliminar, onEditar }) => {
-    
+    // 2️⃣ LA VARIABLE MÁGICA DEBE IR AQUÍ ADENTRO
+    const esAdmin = getRole() === 'ADMIN';
     // Función para darle color al badge según el tipo
     const getTipoEstilo = (tipo) => {
         const estilos = {
