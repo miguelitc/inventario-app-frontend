@@ -3,7 +3,7 @@ import React from 'react';
 import { getRole } from '../services/authService';
 
 const TarjetaEquipo = ({ equipo, onEliminar, onEditar }) => {
-    // 2️⃣ LA VARIABLE MÁGICA DEBE IR AQUÍ ADENTRO
+   
     const esAdmin = getRole() === 'ADMIN';
     // Función para darle color al badge según el tipo
     const getTipoEstilo = (tipo) => {
@@ -51,7 +51,7 @@ const TarjetaEquipo = ({ equipo, onEliminar, onEditar }) => {
                         {equipo.empleado ? equipo.empleado.nombre : 'Sin asignar'}
                     </span>
                 </div>
-                //
+                
                 {/* Lado Derecho: Acciones (Solo se renderizan si esAdmin es true) prueba para cambios */}
                 {esAdmin && (
                     <div className="flex items-center gap-2 border-t md:border-t-0 pt-4 md:pt-0">
